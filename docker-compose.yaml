@@ -1,11 +1,5 @@
-version: "3"
+version: "3.6"
 services:
-  proxy:
-    image: advizex/adam-proxy:latest
-    ports:
-      - "80:80"
-    networks:
-      - frontend
   db:
     image: advizex/adam-db:latest
     ports:
@@ -13,14 +7,30 @@ services:
     networks:
       - backend
     volumes:
-      - adamdrive
+      - type: volume
+        source: adamdrive
+        target: /data
+        volume:
+          nocopy: true
+    environment:
+      ACCEPT_EULA: "Y"
   app:
     image: advizex/adam-app:latest
+    depends_on:
+      - db
     ports:
       - "8080:8080"
     networks:
       - frontend
       - backend
+  proxy:
+    image: advizex/adam-proxy:latest
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    networks:
+      - frontend
 networks:
   frontend:
   backend:
