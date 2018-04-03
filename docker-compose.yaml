@@ -1,0 +1,28 @@
+version: "3"
+services:
+  proxy:
+    image: advizex/adam-proxy:latest
+    ports:
+      - "80:80"
+    networks:
+      - frontend
+  db:
+    image: advizex/adam-db:latest
+    ports:
+      - "1433:1433"
+    networks:
+      - backend
+    volumes:
+      - adamdrive
+  app:
+    image: advizex/adam-app:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - frontend
+      - backend
+networks:
+  frontend:
+  backend:
+volumes:
+  adamdrive:
