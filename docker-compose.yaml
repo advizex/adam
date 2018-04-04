@@ -9,7 +9,7 @@ services:
     volumes:
       - type: volume
         source: adamdrive
-        target: /data
+        target: /var/opt/mssql
         volume:
           nocopy: true
     environment:
