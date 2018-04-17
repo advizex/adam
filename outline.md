@@ -11,7 +11,7 @@ Quick intro of attendees.
 
 ## Overview of Docker architecture
 
-- ![Docker Architecture](https://docs.docker.com/engine/docker-overview/#docker-architecture)
+- [Docker Architecture](https://docs.docker.com/engine/docker-overview/#docker-architecture)
 
 - Containers are best compared to a process
 
@@ -24,6 +24,8 @@ Quick intro of attendees.
 ## Dockerfile
 
 - Format and components
+
+- Call out on DB -- using mssql in a container which is cool
 
 ## Docker Compose
 
