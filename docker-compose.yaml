@@ -20,6 +20,8 @@ services:
     networks:
       - frontend
       - backend
+    environment:
+      SERVICE_NAME: "app"
   proxy:
     image: advizex/adam-proxy:latest
     depends_on:
