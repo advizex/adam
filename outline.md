@@ -2,11 +2,6 @@
 
 Quick intro of attendees.
 
-## Demo Host
-
-- 35.229.126.116
-- /opt/repos/adam
-
 # Agenda
 
 ## Overview of Docker architecture
@@ -17,7 +12,11 @@ Quick intro of attendees.
 
 - Images versus containers
 
-  - Image layers
+- Image layers
+
+  - Write only layers (overlayfs, unionfs)
+  - Allows for faster pull and local caching
+  - Only writing to the top layer so we can build on other images
 
 - Network and storage drivers
 
