@@ -38,7 +38,6 @@ spec:
       from:
         kind: ImageStreamTag
         name: adam-proxy:latest
-        namespace: myproject
   strategy:
     type: Rolling
   paused: false

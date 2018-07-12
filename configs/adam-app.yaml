@@ -41,7 +41,6 @@ spec:
       from:
         kind: ImageStreamTag
         name: adam-app:latest
-        namespace: myproject
   strategy:
     type: Rolling
   paused: false

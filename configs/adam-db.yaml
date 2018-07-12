@@ -63,7 +63,6 @@ spec:
       from:
         kind: ImageStreamTag
         name: adam-db:latest
-        namespace: myproject
   strategy:
     type: Rolling
   paused: false
