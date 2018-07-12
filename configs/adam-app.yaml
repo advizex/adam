@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ImageStream
+metadata:
+  name: adam-app
+  labels:
+    app: adam-app
+spec:
+  dockerImageRepository: docker.io/advizex/adam-app
+---
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: adam-app
+  labels:
+    app: adam-app
+spec:
+  replicas: 1
+  strategy:
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: adam-app
+    spec:
+      containers:
+      - name: adam-app
+        env:
+        - name: SERVICE_NAME
+          value: adam-app
+        image: advizex/adam-app:latest
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+  triggers:
+  - type: ConfigChange
+  - type: ImageChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - adam-app
+      from:
+        kind: ImageStreamTag
+        name: adam-app:latest
+        namespace: myproject
+  strategy:
+    type: Rolling
+  paused: false
+  revisionHistoryLimit: 3
+  minReadySeconds: 0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adam-app
+  labels:
+    app: adam-app
+spec:
+  selector:
+    app: adam-app
+  ports:
+  - port: 8080
+    targetPort: 8080

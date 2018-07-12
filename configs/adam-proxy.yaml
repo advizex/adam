@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ImageStream
+metadata:
+  name: adam-proxy
+  labels:
+    app: adam-proxy
+spec:
+  dockerImageRepository: docker.io/advizex/adam-proxy
+---
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: adam-proxy
+  labels:
+    app: adam-proxy
+spec:
+  replicas: 1
+  strategy:
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: adam-proxy
+    spec:
+      containers:
+      - name: adam-proxy
+        image: advizex/adam-proxy:latest
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
+  triggers:
+  - type: ConfigChange
+  - type: ImageChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - adam-proxy
+      from:
+        kind: ImageStreamTag
+        name: adam-proxy:latest
+        namespace: myproject
+  strategy:
+    type: Rolling
+  paused: false
+  revisionHistoryLimit: 3
+  minReadySeconds: 0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adam-proxy
+  labels:
+    app: adam-proxy
+spec:
+  selector:
+    app: adam-proxy
+  ports:
+  - port: 80
+    targetPort: 80

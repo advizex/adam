@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: adam-tools
+  labels:
+    app: adam-tools
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: adam-tools
+    spec:
+      containers:
+      - name: tools
+        image: advizex/adam-tools:latest
+      restartPolicy: Always

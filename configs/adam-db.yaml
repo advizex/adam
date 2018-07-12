@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: adamdrive
+  labels:
+    volume: adamdrive
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: ImageStream
+metadata:
+  name: adam-db
+  labels:
+    app: adam-db
+spec:
+  dockerImageRepository: docker.io/advizex/adam-db
+---
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: adam-db
+  labels:
+    app: adam-db
+spec:
+  replicas: 1
+  strategy:
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: adam-db
+    spec:
+      containers:
+      - name: adam-db
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          value: Dolce9Lyfe
+        image: advizex/adam-db:latest
+        ports:
+        - containerPort: 1433
+        volumeMounts:
+        - mountPath: /var/opt/mssql
+          name: adamdrive
+      restartPolicy: Always
+      volumes:
+      - name: adamdrive
+        persistentVolumeClaim:
+          claimName: adamdrive
+  triggers:
+  - type: ConfigChange
+  - type: ImageChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - adam-db
+      from:
+        kind: ImageStreamTag
+        name: adam-db:latest
+        namespace: myproject
+  strategy:
+    type: Rolling
+  paused: false
+  revisionHistoryLimit: 3
+  minReadySeconds: 0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adam-db
+  labels:
+    app: adam-db
+spec:
+  selector:
+    app: adam-db
+  ports:
+  - port: 1433
+    targetPort: 1433
